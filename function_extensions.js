@@ -1,6 +1,6 @@
 Object.extend(Function.prototype, {
   /**
-   * Function#optionize([defaultOptions = { }]) -> Function
+   * Function#withOptions([defaultOptions = { }]) -> Function
    *
    * Encapsulates the common pattern where function's last argument 
    * holds unordered optional named arguments with eventual default values.
@@ -11,7 +11,7 @@ Object.extend(Function.prototype, {
    *    var hideItem = function(element, $options) {
    *      if (!$option.confirmation || confirm($options.confirmation))
    *        $options.hideMethod(element);
-   *    }.optionize({ confirmation: "sure ?", hideMethod: Element.fade });
+   *    }.withOptions({ confirmation: "sure ?", hideMethod: Element.fade });
    *    
    *    hideItem("item_222", { hideMethod: Element.hide });
    *    // -> Requests confirmation and hides element using Element.hide.
@@ -26,7 +26,7 @@ Object.extend(Function.prototype, {
    *     hideItem.defaultOptions.confirmation = false;
    *     // -> future calls to hideItem won't request confirmation by default.
    **/
-  optionize: function(defaultOptions) {
+  withOptions: function(defaultOptions) {
     var lambda = this, argumentNames = lambda.argumentNames();
     var optionsIndex = argumentNames.indexOf('$options');
 
@@ -55,6 +55,6 @@ Object.extend(Function.prototype, {
     // not doing sweet (iterations || 1).times(this) to ensure
     // we're measuring the right stuff.
     while (iterations--) this();
-    return new Date - d;
+    return new Date - date;
   }
 });
