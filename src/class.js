@@ -14,7 +14,7 @@ var Concept = {
   },
 
   addMethods: function(source) {
-    if (source instanceof Mixin)
+    if (Object.isFunction(window.Mixin) && source instanceof Mixin)
       return this.mixin(source);
     for (var property in source)
       this.addMethod(property, source[property]);
@@ -56,11 +56,10 @@ var Class = {
   }
 };
 
-var Mixin = function(){};
-Mixin = Class.create(Concept, (function() {  
+var Mixin = Class.create(Concept, (function() {  
   return {
-    initialize: function(body) {
-      this.prototype = body || { };
+    initialize: function(source) {
+      this.prototype = source || { };
       this.implementors = [ ];
     },
 

@@ -8,6 +8,12 @@ var ClassExtensions = {
     return this;
   },
   
+  wrapMethods: function(wrappers) {
+    Object.keys(wrappers).each(function(property) {
+      this.wrapMethod(property, wrappers[property]);
+    }, this);
+  },
+  
   addOwnMethod: function(name, block) {
     this[name] = block;
     return this;
@@ -31,6 +37,7 @@ var ClassExtensions = {
   },
   
   ancestors: function() {
+    if (!this.superclass) return [ ];
     return [ this.superclass ].concat(this.superclass.ancestors());
   }
 };
