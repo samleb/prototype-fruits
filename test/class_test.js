@@ -18,7 +18,7 @@ Number.addMethod('compareTo', function(other) {
   else return 0;
 });
 
-var Person = Class.create(Comparable, {
+var Player = Class.create(Comparable, {
   initialize: function(name, skill) {
     this.name = name;
     this.skill = skill;
@@ -29,13 +29,12 @@ var Person = Class.create(Comparable, {
   }
 });
 
-var Sortable = new Mixin({
+// An Enumerable whose elements are Comparable !
+var Sortable = new Mixin(Enumerable, {
   sort: function() {
-    return this.sortBy(Prototype.K);
+    return this.toArray().sort(function(a, b) { return a.compareTo(b) });
   }
 });
-
-Sortable.addMethods(Enumerable);
 
 var Set = Class.create(Sortable, {
   initialize: function(enumerable) {
@@ -51,10 +50,10 @@ new Test.Unit.Runner({
   testMixin: function() {
     this.assertInstanceOf(Mixin, Comparable);
     this.assertRespondsTo('addMethod', Comparable);
-    this.assertEnumEqual([Person], Comparable.implementors);
+    this.assertEnumEqual([Player], Comparable.implementors);
 
-    var bobby = new Person('bobby', 20);
-    var billy = new Person('billy', 30);
+    var bobby = new Player('bobby', 20);
+    var billy = new Player('billy', 30);
 
     this.assert(bobby.lowerThan(billy));
 
@@ -65,7 +64,7 @@ new Test.Unit.Runner({
     this.assertRespondsTo('lowerThanOrEqualTo', bobby);
     this.assert(bobby.lowerThanOrEqualTo(billy));
 
-    var set = new Set([3, 2, 1]);
-    this.assertEnumEqual([1,2,3], set.sort());
+    var set = new Set([billy, bobby]);
+    this.assertEnumEqual([bobby, billy], set.sort());
   }
 });

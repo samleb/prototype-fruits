@@ -29,7 +29,10 @@ var Concept = {
 
 Object.Base = Object.extend(function Base() { }, Concept);
 Object.Base.subclasses = [ ];
-Object.Base.addMethod('initialize', Prototype.emptyFunction);
+Object.Base.addMethods({
+  initialize: Prototype.emptyFunction,
+  extend: Object.extend.methodize()
+});
 
 var Class = {
   create: function(superclass) {
@@ -58,9 +61,10 @@ var Class = {
 
 var Mixin = Class.create(Concept, (function() {  
   return {
-    initialize: function(source) {
-      this.prototype = source || { };
+    initialize: function() {
+      this.prototype = { };
       this.implementors = [ ];
+      $A(arguments).each(this.addMethods, this);
     },
 
     addMethod: Concept.addMethod.wrap(function(addMethod, name, block) {
@@ -78,7 +82,7 @@ var Mixin = Class.create(Concept, (function() {
   };
   
   function addMethodResolver(mixin, implementor, name) {
-    if (!implementor.prototype[name]){
+    if (!implementor.prototype[name]) {
       implementor.addMethod(name, function() {
         return mixin.prototype[name].apply(this, arguments);
       });
