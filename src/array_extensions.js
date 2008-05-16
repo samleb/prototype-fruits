@@ -75,10 +75,24 @@ Object.extend(Array.prototype, {
       index = this.length + index + 1;
     }
       
-    this.splice.apply(this, [ index, 0 ].concat($A(arguments).slice(1)));
+    this.splice.apply(this, [ index, 0 ].concat(Array.slice(arguments, 1)));
     return this;
   }
 });
 
 // Alias method for consistency with Prototype API.
 Array.prototype.empty = Array.prototype.isEmpty;
+
+if (!Array.slice) {
+  /**
+   * Array.slice(object[, begin = 0[, end = object.length]]) -> Array
+   * Turns an array-lookalike object into an array, starting at start, ending at end.
+   * Useful to slice arguments object and get an array, faster than using $A in this case.
+   *     $A(arguments).slice(1)
+   * becomes
+   *     Array.slice(arguments, 1);
+   */
+  Array.slice = function(array, start, end) {
+    return Array.prototype.slice.call(array, start || 0, end || array.length);
+  };
+}
