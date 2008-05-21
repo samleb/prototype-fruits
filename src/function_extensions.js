@@ -1,3 +1,8 @@
+/**
+ * File: function_extensions.js
+ *   requires: object_extensions.js
+ **/
+ 
 Object.extend(Function.prototype, {
   /**
    * Function#withOptions([defaultOptions = { }]) -> Function
@@ -19,28 +24,19 @@ Object.extend(Function.prototype, {
    *    // -> Hides element using Element.fade without any confirmation.
    *    hideItem("item_34");
    *    // -> Hides element using default options.
-   *
-   * Default options are accessible through defaultOptions property.
-   *
-   * Example:
-   *     hideItem.defaultOptions.confirmation = false;
    *     // -> future calls to hideItem won't request confirmation by default.
+   *
    **/
   withOptions: function(defaultOptions) {
     var lambda = this, argumentNames = lambda.argumentNames();
     var optionsIndex = argumentNames.indexOf('$options');
-
-    if (optionsIndex < 0) return lambda;
-
-    return Object.extend(function() {
-      var args = $A(arguments), options = args[optionsIndex];
-
-      args[optionsIndex] = Object.clone(arguments.callee.defaultOptions);
-      Object.extend(args[optionsIndex], options || { });
-
+    
+    return (optionsIndex < 0) ? lambda : function() {
+      var args = $A(arguments);
+      var options = args[optionsIndex];
+      args[optionsIndex] = Object.merge(defaultOptions, options || { });
       return lambda.apply(this, args);
-
-    }, { defaultOptions: defaultOptions || { } });
+    };
   },
   
   /**

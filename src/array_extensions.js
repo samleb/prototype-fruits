@@ -87,8 +87,9 @@ if (!Array.slice) {
   /**
    * Array.slice(object[, begin = 0[, end = object.length]]) -> Array
    * Turns an array-lookalike object into an array, starting at start, ending at end.
-   * Useful to slice arguments object and get an array, faster than using $A in this case.
-   *     $A(arguments).slice(1)
+   * Useful to slice arguments object and get an array, faster than using $A then 
+   * Array#slice in this case.
+   *     $A(arguments).slice(1);
    * becomes
    *     Array.slice(arguments, 1);
    */

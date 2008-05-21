@@ -6,65 +6,66 @@ var Comparable = new Mixin({
   lowerThan: function(other) {
     return this.compareTo(other) < 0;
   },
-
+  
   equalTo: function(other) {
     return this.compareTo(other) == 0;
   }
+  // etc....
 });
 
-Number.addMethod('compareTo', function(other) {
-  if (this > other) return 1;
-  if (this < other) return -1;
-  else return 0;
-});
-
-var Player = Class.create(Comparable, {
-  initialize: function(name, skill) {
-    this.name = name;
-    this.skill = skill;
+Number.addMethods({
+  compareTo: function(number) {
+    if (!Object.isNumber(number)) throw { type: "ArgumentError" };
+    if (this > number) return 1;
+    if (this < number) return -1;
+    return 0
   },
-
-  compareTo: function(other) {
-    return this.skill.compareTo(other.skill);
+  
+  equalTo: function(number) {
+    return this === number;
   }
 });
 
-// An Enumerable whose elements are Comparable !
+Number.addMethods(Comparable);
+
+var Set = Class.create(Enumerable, {
+  initialize: function(elements) {
+    this.elements = [ ];
+    $A(elements).each(this.add, this);
+  },
+  
+  add: function(element) {
+    if (this.elements.include(element))
+      return false;
+    this.elements.push(element);
+  },
+});
+
+// An Enumerable whose elements are Comparable...
 var Sortable = new Mixin(Enumerable, {
   sort: function() {
     return this.toArray().sort(function(a, b) { return a.compareTo(b) });
   }
 });
 
-var Set = Class.create(Sortable, {
-  initialize: function(enumerable) {
-    this.elements = $A(enumerable);
+var NumberSet = Class.create(Set, Sortable, {
+  add: function($super, number) {
+    if (!Object.isNumber(number)) throw { type: "ArgumentError" };
+    return $super(number);
   },
-
-  _each: function(iterator, context) {
-    return this.elements._each(iterator, context);
-  }
 });
 
 new Test.Unit.Runner({
   testMixin: function() {
     this.assertInstanceOf(Mixin, Comparable);
     this.assertRespondsTo('addMethod', Comparable);
-    this.assertEnumEqual([Player], Comparable.implementors);
-
-    var bobby = new Player('bobby', 20);
-    var billy = new Player('billy', 30);
-
-    this.assert(bobby.lowerThan(billy));
-
-    Comparable.addMethod('lowerThanOrEqualTo', function(other) {
-      return this.compareTo(other) <= 0;
-    });
-
-    this.assertRespondsTo('lowerThanOrEqualTo', bobby);
-    this.assert(bobby.lowerThanOrEqualTo(billy));
-
-    var set = new Set([billy, bobby]);
-    this.assertEnumEqual([bobby, billy], set.sort());
+    this.assertEnumEqual([Number], Comparable.implementors);
+  },
+  
+  testClassWithMixin: function() {
+    this.assert((3).lowerThan(4));
+    this.assertNothingRaised(function() {
+      this.assert(!(3).equalTo("3"), "mixin shoudn't override class methods");
+    }.bind(this));
   }
 });

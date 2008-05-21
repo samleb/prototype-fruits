@@ -1,6 +1,6 @@
 var ClassExtensions = {
   getMethod: function(name) {
-    return this.prototype[name].valueOf();
+    return this.prototype[name];
   },
   
   wrapMethod: function(name, wrapper) {

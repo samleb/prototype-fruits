@@ -1,33 +1,33 @@
 new Test.Unit.Runner({
-  testRemoveAt: function(){with(this){
+  testRemoveAt: function() {
     var array = $R(1, 5).toArray();
     array.removeAt(0);
-    assertEnumEqual([ 2, 3, 4, 5 ], array);
-    assertEqual(4, array.removeAt(-2));
-    assertEnumEqual([ 2, 3, 5 ], array);
-    assertEqual(5, array.removeAt(-1));
-    assertEnumEqual([ 2, 3 ], array);
-    assertUndefined(array.removeAt(6));
-    assertUndefined(array.removeAt(-6));
-    assertEnumEqual([ 2, 3 ], array);
-    assertUndefined(array.removeAt(2));
-    assertEqual(3, array.removeAt(1));
-    assertEqual(2, array.removeAt(-1));
-    assertEqual(0, array.length);
-  }},
+    this.assertEnumEqual([ 2, 3, 4, 5 ], array);
+    this.assertEqual(4, array.removeAt(-2));
+    this.assertEnumEqual([ 2, 3, 5 ], array);
+    this.assertEqual(5, array.removeAt(-1));
+    this.assertEnumEqual([ 2, 3 ], array);
+    this.assertUndefined(array.removeAt(6));
+    this.assertUndefined(array.removeAt(-6));
+    this.assertEnumEqual([ 2, 3 ], array);
+    this.assertUndefined(array.removeAt(2));
+    this.assertEqual(3, array.removeAt(1));
+    this.assertEqual(2, array.removeAt(-1));
+    this.assertEqual(0, array.length);
+  },
   
-  testRemoveIf: function(){with(this){
+  testRemoveIf: function() {
     var array = $R(1, 5).toArray();
-    assertEnumEqual([ ], array.removeIf(function() { return false }));
-    assertEnumEqual([ 1, 2, 3, 4, 5 ], array);
+    this.assertEnumEqual([ ], array.removeIf(function() { return false }));
+    this.assertEnumEqual([ 1, 2, 3, 4, 5 ], array);
     
-    assertEnumEqual([ 1, 2, 3, 4, 5 ], array.removeIf(function(n) { return true }));
-    assertEnumEqual([ ], array);
+    this.assertEnumEqual([ 1, 2, 3, 4, 5 ], array.removeIf(function(n) { return true }));
+    this.assertEnumEqual([ ], array);
     
     array = $R(1, 5).toArray();
-    assertEnumEqual([ 4, 5 ], array.removeIf(function(n) { return n > 3 }));
-    assertEnumEqual([ 1, 2, 3 ], array);
-  }},
+    this.assertEnumEqual([ 4, 5 ], array.removeIf(function(n) { return n > 3 }));
+    this.assertEnumEqual([ 1, 2, 3 ], array);
+  },
   
   testStaticSlice: function() {
     var array = ["foo", "bar", "baz"];
