@@ -1,23 +1,19 @@
 Object.extend(Object, (function() {
+  function hasMethod(object, property) {
+    return object && Object.isFunction(object[property]);
+  }
+  
   function equal(object, other) {
     if (object === other) return true;
-    if (object && Object.isFunction(object.equals)) {
-      return object.equals(other);
-    }
-    if (other && Object.isFunction(other.equals)) {
-      return other.equals(object);
-    }
+    if (hasMethod(object, "equals")) return object.equals(other);
+    if (hasMethod(other, "equals")) return other.equals(object);
     return false;
   }
   
   function compare(object, other) {
     if (object === other) return 0;
-    if (object && Object.isFunction(object.compareTo)) {
-      return object.compareTo(other);
-    }
-    if (other && Object.isFunction(object.compareTo)) {
-      return other.compareTo(object);
-    }
+    if (hasMethod(object, "compareTo")) return object.compareTo(other);
+    if (hasMethod(object, "compareTo")) return other.compareTo(object);
   }
   
   return {
