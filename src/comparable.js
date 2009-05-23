@@ -3,6 +3,16 @@ Object.extend(Object, (function() {
     return object && Object.isFunction(object[property]);
   }
   
+  return {
+    hasMethod: hasMethod
+  };
+})());
+
+Object.extend(Object, (function() {
+  function hasMethod(object, property) {
+    return object && Object.isFunction(object[property]);
+  }
+  
   function equal(object, other) {
     if (object === other) return true;
     if (hasMethod(object, "equals")) return object.equals(other);
@@ -82,7 +92,7 @@ var Comparable = (function() {
 (function() {
   function nativelyComparable(constructor) {
     function equals(other) {
-      return this === other;
+      return !!other && other.valueOf() === this.valueOf();
     }
     
     function compareTo(other) {
@@ -108,12 +118,12 @@ var Comparable = (function() {
 Object.extend(Array.prototype, (function() {
   function equals(other) {
     if (this === other) return true;
-    if (!Object.isArray(other) || this.length !== other.length) {
-      return false;
+    if (Object.isArray(other) && this.length === other.length) {
+      return this.all(function(value, index) {
+        return Object.equal(value, other[index]);
+      });
     }
-    return this.all(function(value, index) {
-      return Object.equal(value, other[index]);
-    });
+    return false;
   }
   
   return {
@@ -121,7 +131,7 @@ Object.extend(Array.prototype, (function() {
   };
 })());
 
-Object.extend(Enumerable, function() {
+Object.extend(Enumerable, {
   sort: function() {
     return this.toArray().sort(Object.compare);
   }

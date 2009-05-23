@@ -31,5 +31,9 @@ new Test.Unit.Runner({
   },
   testArrayComparison: function() {
     this.assert([1,2,3].equals([1,2,3]));
+  },
+  testNativesWrappersComparison: function() {
+    this.assert("salut".equals(new String("salut")));
+    this.assert(new String("salut").equals("salut"));
   }
 });
